@@ -10,14 +10,16 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.m3.imagepicker.databinding.ActivityMainBinding
 import com.m3.islami2.base.BaseActivity
 
 class MainActivity : BaseActivity() {
 
-
+ lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding=ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (isPermissionGranted()) {
             openGallery()
@@ -34,6 +36,7 @@ class MainActivity : BaseActivity() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
+                openGallery()
 
 
             } else {
@@ -65,9 +68,11 @@ class MainActivity : BaseActivity() {
 
 
     private fun openGallery() {
-        TODO("Not yet implemented")
+        binding.button.setOnClickListener {
+            intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, 3)
+        }
     }
-
 
     private fun isPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(this,
